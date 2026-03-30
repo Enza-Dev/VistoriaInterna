@@ -14,10 +14,11 @@
         .header-tablet { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #003399; padding-bottom: 10px; margin-bottom: 20px; }
         .logo-img-t { height: 45px; object-fit: contain; }
 
-        .config-box { background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #ddd; display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; }
+        .config-box { background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #ddd; display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; }
         .config-box div { display: flex; flex-direction: column; gap: 5px; }
         .config-box label { font-size: 11px; font-weight: bold; color: #003399; }
-        .config-box input { border: none; border-bottom: 2px solid #003399; background: transparent; font-size: 16px; font-weight: bold; outline: none; padding: 5px 0; }
+        .config-box input, .config-box select { border: none; border-bottom: 2px solid #003399; background: transparent; font-size: 15px; font-weight: bold; outline: none; padding: 5px 0; font-family: inherit; color: #333; }
+        .config-box select { cursor: pointer; }
 
         .setor-card { margin-bottom: 10px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden; }
         .setor-header { background: #003399; color: white; padding: 15px; font-weight: bold; cursor: pointer; list-style: none; }
@@ -27,15 +28,12 @@
         
         .form-body { padding: 15px; display: flex; flex-direction: column; gap: 15px; }
         
-        /* Bloco Simplificado */
-        .problem-block { background: #fff; border: 1px solid #e0e0e0; padding: 15px; border-radius: 8px; position: relative; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: grid; grid-template-columns: 200px 1fr 240px; gap: 15px; align-items: start; }
+        /* Bloco Simplificado (Único por item) */
+        .problem-block { background: #fff; display: grid; grid-template-columns: 200px 1fr 240px; gap: 15px; align-items: start; }
         
-        /* Ajuste para telas menores */
         @media (max-width: 768px) {
             .problem-block { grid-template-columns: 1fr; }
         }
-
-        .btn-remove-prob { position: absolute; top: -10px; right: -10px; background: #e74c3c; color: white; border: none; border-radius: 50%; width: 24px; height: 24px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
         
         .field-group { display: flex; flex-direction: column; gap: 5px; height: 100%; }
         .field-group label { font-size: 11px; font-weight: bold; color: #666; text-transform: uppercase; }
@@ -47,7 +45,7 @@
         .btn-aprovado.active { background: #27ae60; color: white; border-color: #27ae60; }
         .btn-pendente.active { background: #f1c40f; color: black; border-color: #f1c40f; }
 
-        /* Upload de Foto (Unificado) */
+        /* Upload de Foto */
         .upload-container { display: flex; flex-direction: column; gap: 5px; width: 100%; }
         .foto-upload-btn { width: 100%; background: #f0f2f5; border: 1px dashed #999; border-radius: 6px; text-align: center; cursor: pointer; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; padding: 12px; min-height: 50px; }
         .foto-upload-btn input[type="file"] { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
@@ -56,8 +54,6 @@
         .img-preview-box { flex: 1; position: relative; }
         .img-preview { width: 100%; height: 60px; object-fit: cover; border-radius: 4px; }
         .btn-remove-foto { position: absolute; top: -5px; right: -5px; background: #e74c3c; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 10px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-
-        .btn-add-prob { background: #f0f7ff; color: #003399; border: 2px dashed #003399; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; text-align: center; transition: 0.2s; }
 
         .footer-actions { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 15px; display: flex; gap: 10px; box-shadow: 0 -3px 10px rgba(0,0,0,0.1); z-index: 100; }
         .btn-action { flex: 1; padding: 18px; border: none; border-radius: 8px; color: white; font-weight: bold; font-size: 16px; cursor: pointer; }
@@ -91,7 +87,16 @@
     </div>
 
     <div class="config-box">
-        <div><label>BLOCO</label><input type="text" id="bloco-val" placeholder="A" oninput="autoSave()"></div>
+        <div>
+            <label>MODELO DE VISTORIA</label>
+            <select id="modelo-val" onchange="changeModelo()">
+                <option value="jabuticabeiras">Jabuticabeiras</option>
+                <option value="palmeiras_comum">Palmeiras Comum</option>
+                <option value="palmeiras_duplex">Palmeiras Duplex</option>
+                <option value="sagrados">Sagrados</option>
+            </select>
+        </div>
+        <div><label>BLOCO/TORRE</label><input type="text" id="bloco-val" placeholder="A" oninput="autoSave()"></div>
         <div><label>APTO</label><input type="text" id="apto-val" placeholder="00" oninput="autoSave()"></div>
         <div><label>VISTORIADOR</label><input type="text" id="resp-val" placeholder="Nome" oninput="autoSave()"></div>
         <div><label>DATA</label><input type="date" id="data-val" oninput="autoSave()"></div>
@@ -105,7 +110,7 @@
         <tr>
             <td style="width: 20%;"><img src="logo_village.png" class="logo-img-pdf" onerror="this.style.display='none'"></td>
             <td style="width: 60%;">
-                <div style="font-size: 16px; font-weight: bold;">RELATÓRIO DE VISTORIA</div>
+                <div style="font-size: 16px; font-weight: bold;">RELATÓRIO DE VISTORIA - <span id="pdf-modelo-text"></span></div>
                 <div style="font-size: 14px; margin-top: 5px;"><b>Bloco:</b> <span id="pdf-bloco-text"></span> | <b>Apto:</b> <span id="pdf-apto-text"></span></div>
                 <div style="font-size: 11px; margin-top: 5px;">
                     Resp: <span id="pdf-resp-text"></span> | Data: <span id="pdf-data-text"></span>
@@ -135,23 +140,90 @@
 </div>
 
 <script>
-    const db = [
-        { local: "Sala de Estar / Jantar", itens: ["Tomadas, interruptores", "Paredes", "Teto", "Esquadrias Madeiras", "Esquadrias Metálicas", "Rodapé", "Pintura", "Gradil Varanda", "Interfone"] },
-        { local: "Quarto 1", itens: ["Tomadas, interruptores", "Paredes", "Teto", "Esquadrias Madeiras", "Esquadrias Metálicas", "Pintura"] },
-        { local: "Quarto 2", itens: ["Tomadas, interruptores", "Paredes", "Teto", "Esquadrias Madeiras", "Esquadrias Metálicas", "Pintura"] },
-        { local: "Banheiro", itens: ["Torneiras", "Vasos sanitários", "Ponto Chuveiro", "Ralo", "Pia", "Esquadrias Metálicas", "Esquadrias de Madeira", "Revestimento Cerâmico", "Pintura", "Tomadas, interruptores"] },
-        { local: "Cozinha / Área de Serviço", itens: ["Revestimento Cerâmico", "Torneiras", "Ralos", "Pia", "Esquadrias Metálicas", "Pintura", "Tomadas, interruptores"] }
-    ];
+    // Listas padronizadas para facilitar a montagem dos templates
+    const itensSala = ["Tomadas, interruptores", "Paredes", "Teto", "Esquadrias Madeiras", "Esquadrias Metálicas", "Rodapé", "Pintura", "Gradil Varanda", "Interfone"];
+    const itensQuarto = ["Tomadas, interruptores", "Paredes", "Teto", "Esquadrias Madeiras", "Esquadrias Metálicas", "Pintura"];
+    const itensBanheiro = ["Torneiras", "Vasos sanitários", "Ponto Chuveiro", "Ralo", "Pia", "Esquadrias Metálicas", "Esquadrias de Madeira", "Revestimento Cerâmico", "Pintura", "Tomadas, interruptores"];
+    const itensCozinha = ["Revestimento Cerâmico", "Torneiras", "Ralos", "Pia", "Esquadrias Metálicas", "Pintura", "Tomadas, interruptores"];
+
+    // Estruturas de acordo com os empreendimentos
+    const templates = {
+        "jabuticabeiras": [
+            { local: "Sala de Estar / Jantar", itens: itensSala },
+            { local: "Quarto 1", itens: itensQuarto },
+            { local: "Quarto 2", itens: itensQuarto },
+            { local: "Banheiro", itens: itensBanheiro },
+            { local: "Cozinha / Área de Serviço", itens: itensCozinha }
+        ],
+        "palmeiras_comum": [
+            { local: "Sala de Estar / Jantar", itens: itensSala },
+            { local: "Quarto 1", itens: itensQuarto },
+            { local: "Quarto 2", itens: itensQuarto },
+            { local: "Banheiro 1", itens: itensBanheiro },
+            { local: "Banheiro 2", itens: itensBanheiro }, 
+            { local: "Cozinha / Área de Serviço", itens: itensCozinha }
+        ],
+        "palmeiras_duplex": [
+            { local: "Sala de Estar / Jantar", itens: itensSala },
+            { local: "Quarto 1", itens: itensQuarto },
+            { local: "Quarto 2", itens: itensQuarto },
+            { local: "Quarto 3", itens: itensQuarto }, 
+            { local: "Banheiro 1", itens: itensBanheiro },
+            { local: "Banheiro 2", itens: itensBanheiro },
+            { local: "Banheiro 3", itens: itensBanheiro }, 
+            { local: "Cozinha / Área de Serviço", itens: itensCozinha }
+        ],
+        "sagrados": [
+            { local: "Sala de Estar / Jantar", itens: itensSala },
+            { local: "Quarto 1", itens: itensQuarto },
+            { local: "Quarto 2", itens: itensQuarto },
+            { local: "Banheiro 1", itens: itensBanheiro },
+            { local: "Banheiro 2", itens: itensBanheiro }, 
+            { local: "Cozinha / Área de Serviço", itens: itensCozinha }
+        ]
+    };
+
+    let db = []; 
 
     function init() {
         const saved = JSON.parse(localStorage.getItem('enza_v_v15')) || {};
         
+        document.getElementById('modelo-val').value = saved.modelo || "jabuticabeiras";
         document.getElementById('bloco-val').value = saved.bloco || saved.torre || "";
         document.getElementById('apto-val').value = saved.apto || "";
         document.getElementById('resp-val').value = saved.resp || "";
-        document.getElementById('data-val').value = saved.d_val || saved.d_ini || ""; // Mantém a compatibilidade com a data que já estava salva
+        document.getElementById('data-val').value = saved.d_val || saved.d_ini || ""; 
+
+        renderStructure();
+    }
+
+    function changeModelo() {
+        const confirmar = confirm("Mudar o modelo de vistoria irá reconfigurar os cômodos. Se você já preencheu dados, certifique-se de salvar ou gerar o PDF antes. Deseja trocar o modelo?");
+        
+        if (confirmar) {
+            const currentSave = JSON.parse(localStorage.getItem('enza_v_v15')) || {};
+            const cleanData = { 
+                modelo: document.getElementById('modelo-val').value,
+                bloco: currentSave.bloco, 
+                apto: currentSave.apto, 
+                resp: currentSave.resp, 
+                d_val: currentSave.d_val 
+            };
+            localStorage.setItem('enza_v_v15', JSON.stringify(cleanData));
+            renderStructure();
+        } else {
+            const saved = JSON.parse(localStorage.getItem('enza_v_v15')) || {};
+            document.getElementById('modelo-val').value = saved.modelo || "jabuticabeiras";
+        }
+    }
+
+    function renderStructure() {
+        const modeloSelect = document.getElementById('modelo-val').value;
+        db = templates[modeloSelect]; 
+        const saved = JSON.parse(localStorage.getItem('enza_v_v15')) || {};
 
         const container = document.getElementById('content');
+        container.innerHTML = ''; 
 
         db.forEach((setor, sIdx) => {
             const sec = document.createElement('details');
@@ -161,27 +233,31 @@
 
             setor.itens.forEach((item, iIdx) => {
                 const id = `s${sIdx}i${iIdx}`;
-                const probsArray = saved[id] && saved[id].length > 0 ? saved[id] : [{ st:'', obs:'', img1:'', img2:'', img3:'' }];
+                
+                // Resgata os dados antigos (se for array pega o 1º, se não, usa vazio)
+                let probData = { st:'', obs:'', img1:'', img2:'', img3:'' };
+                if (saved[id] && saved[id].length > 0) {
+                    probData = saved[id][0];
+                }
                 
                 const det = document.createElement('details');
                 det.className = 'item-details';
                 
-                let innerHTML = `<summary class="item-summary">${item}</summary><div class="form-body" id="list-${id}"></div>`;
+                let innerHTML = `
+                    <summary class="item-summary">${item}</summary>
+                    <div class="form-body" id="list-${id}"></div>
+                `;
                 det.innerHTML = innerHTML;
                 document.getElementById(`sec-${sIdx}`).appendChild(det);
 
-                probsArray.forEach(probData => addProblemHTML(id, probData));
-
-                const btnAdd = document.createElement('button');
-                btnAdd.className = 'btn-add-prob';
-                btnAdd.innerText = '+ Adicionar outro apontamento';
-                btnAdd.onclick = () => { addProblemHTML(id, null); autoSave(); };
-                document.getElementById(`list-${id}`).appendChild(btnAdd);
+                renderProblemBlock(id, probData);
             });
         });
+        
+        autoSave(); 
     }
 
-    function addProblemHTML(itemId, data) {
+    function renderProblemBlock(itemId, data) {
         const list = document.getElementById(`list-${itemId}`);
         const block = document.createElement('div');
         block.className = 'problem-block';
@@ -193,8 +269,6 @@
         const img3 = data ? data.img3 || '' : '';
 
         block.innerHTML = `
-            <button class="btn-remove-prob" onclick="this.parentElement.remove(); autoSave();">X</button>
-            
             <div class="field-group">
                 <label>Status</label>
                 <div class="btn-group">
@@ -202,12 +276,10 @@
                     <button class="btn-status btn-pendente ${st==='PENDENTE'?'active':''}" onclick="setStatus(this,'PENDENTE')">PENDENTE</button>
                 </div>
             </div>
-            
             <div class="field-group">
                 <label>Observação</label>
-                <textarea oninput="autoSave()" placeholder="Detalhes, problemas ou soluções...">${obs}</textarea>
+                <textarea oninput="autoSave()" placeholder="Descreva problemas, soluções ou detalhes importantes...">${obs}</textarea>
             </div>
-
             <div class="field-group">
                 <label>Fotos (Até 3)</label>
                 <div class="upload-container">
@@ -215,7 +287,6 @@
                         <span style="font-size: 12px; color: #666; font-weight: bold;">📷 Adicionar Fotos</span>
                         <input type="file" accept="image/*" multiple capture="environment" onchange="processImages(this)">
                     </div>
-                    
                     <div class="fotos-preview-container">
                         <div class="img-preview-box" style="display: ${img1 ? 'block' : 'none'}">
                             <img class="img-preview" src="${img1}">
@@ -233,10 +304,7 @@
                 </div>
             </div>
         `;
-        
-        const btnAdd = list.querySelector('.btn-add-prob');
-        if (btnAdd) list.insertBefore(block, btnAdd);
-        else list.appendChild(block);
+        list.appendChild(block);
     }
 
     function setStatus(btn, st) { 
@@ -255,7 +323,7 @@
         let emptyBoxes = Array.from(previewBoxes).filter(b => b.style.display === 'none' || b.querySelector('.img-preview').src === '');
         
         if (emptyBoxes.length === 0) {
-            alert("O limite é de 3 fotos. Remova alguma foto antes de adicionar outra.");
+            alert("O limite é de 3 fotos por item. Remova alguma foto antes de adicionar outra.");
             input.value = ''; 
             return;
         }
@@ -272,7 +340,6 @@
             };
             reader.readAsDataURL(file);
         });
-        
         input.value = ''; 
     }
 
@@ -284,7 +351,11 @@
     }
 
     function autoSave() {
+        const modeloSelec = document.getElementById('modelo-val');
+        if(!modeloSelec) return;
+
         const data = { 
+            modelo: modeloSelec.value,
             bloco: document.getElementById('bloco-val').value, 
             apto: document.getElementById('apto-val').value,
             resp: document.getElementById('resp-val').value,
@@ -294,17 +365,18 @@
         db.forEach((setor, sIdx) => {
             setor.itens.forEach((item, iIdx) => {
                 const id = `s${sIdx}i${iIdx}`;
-                const blocks = document.querySelectorAll(`#list-${id} .problem-block`);
-                data[id] = Array.from(blocks).map(block => {
+                const block = document.querySelector(`#list-${id} .problem-block`);
+                if (block) {
                     const previews = block.querySelectorAll('.img-preview');
-                    return {
+                    // Salva como array para manter a compatibilidade
+                    data[id] = [{
                         st: block.querySelector('.btn-group .active')?.innerText || '',
                         obs: block.querySelector('textarea').value,
                         img1: previews[0].src.includes('data:image') ? previews[0].src : '',
                         img2: previews[1].src.includes('data:image') ? previews[1].src : '',
                         img3: previews[2].src.includes('data:image') ? previews[2].src : ''
-                    };
-                });
+                    }];
+                }
             });
         });
         localStorage.setItem('enza_v_v15', JSON.stringify(data));
@@ -318,12 +390,16 @@
     }
 
     function exportPDF() {
-        // Rola a tela pro topo pra evitar que o canvas tire o print cortado com aquele espação branco
         window.scrollTo(0, 0);
-
         autoSave();
         const savedData = JSON.parse(localStorage.getItem('enza_v_v15'));
         
+        let nomeModelo = "JABUTICABEIRAS";
+        if(savedData.modelo === "palmeiras_comum") nomeModelo = "PALMEIRAS COMUM";
+        if(savedData.modelo === "palmeiras_duplex") nomeModelo = "PALMEIRAS DUPLEX";
+        if(savedData.modelo === "sagrados") nomeModelo = "SAGRADOS";
+
+        document.getElementById('pdf-modelo-text').innerText = nomeModelo;
         document.getElementById('pdf-bloco-text').innerText = savedData.bloco;
         document.getElementById('pdf-apto-text').innerText = savedData.apto;
         document.getElementById('pdf-resp-text').innerText = savedData.resp;
@@ -338,46 +414,38 @@
             setor.itens.forEach((item, iIdx) => {
                 const id = `s${sIdx}i${iIdx}`;
                 const probs = savedData[id] || [];
-                const rowsToRender = probs.length > 0 ? probs : [{st:'', obs:'', img1:'', img2:'', img3:''}];
+                // Pega sempre o primeiro (único)
+                const p = probs.length > 0 ? probs[0] : {st:'', obs:'', img1:'', img2:'', img3:''};
 
-                rowsToRender.forEach((p, pIdx) => {
-                    const tr = document.createElement('tr');
-                    const obsFmt = p.obs ? p.obs.replace(/\n/g, '<br>') : '';
-                    let html = "";
-                    
-                    if (!setorRendered) {
-                        let totalRowsForSetor = 0;
-                        setor.itens.forEach((_, tempIdx) => {
-                            const tempProbs = savedData[`s${sIdx}i${tempIdx}`] || [];
-                            totalRowsForSetor += tempProbs.length > 0 ? tempProbs.length : 1;
-                        });
-                        html += `<td rowspan="${totalRowsForSetor}" class="col-local">${setor.local}</td>`;
-                        setorRendered = true;
-                    }
+                const tr = document.createElement('tr');
+                const obsFmt = p.obs ? p.obs.replace(/\n/g, '<br>') : '';
+                let html = "";
+                
+                if (!setorRendered) {
+                    // O rowspan agora é exatamente a quantidade de itens do setor
+                    html += `<td rowspan="${setor.itens.length}" class="col-local">${setor.local}</td>`;
+                    setorRendered = true;
+                }
 
-                    if (pIdx === 0) {
-                        html += `<td rowspan="${rowsToRender.length}" class="col-item">${item}</td>`;
-                    }
+                html += `<td class="col-item">${item}</td>`;
 
-                    let imgHtml = '';
-                    if (p.img1) imgHtml += `<img src="${p.img1}" class="pdf-img">`;
-                    if (p.img2) imgHtml += `<img src="${p.img2}" class="pdf-img">`;
-                    if (p.img3) imgHtml += `<img src="${p.img3}" class="pdf-img">`;
+                let imgHtml = '';
+                if (p.img1) imgHtml += `<img src="${p.img1}" class="pdf-img">`;
+                if (p.img2) imgHtml += `<img src="${p.img2}" class="pdf-img">`;
+                if (p.img3) imgHtml += `<img src="${p.img3}" class="pdf-img">`;
 
-                    // Define a cor baseada no status
-                    let stColor = 'black';
-                    if (p.st === 'PENDENTE') stColor = '#d4ac0d'; // Amarelo/Mostarda
-                    if (p.st === 'APROVADO') stColor = '#27ae60'; // Verde
+                let stColor = 'black';
+                if (p.st === 'PENDENTE') stColor = '#d4ac0d'; 
+                if (p.st === 'APROVADO') stColor = '#27ae60'; 
 
-                    html += `
-                        <td class="col-st" style="color:${stColor}; font-weight: bold;">${p.st}</td>
-                        <td class="col-obs">${obsFmt}</td>
-                        <td class="col-foto">${imgHtml}</td>
-                    `;
-                    
-                    tr.innerHTML = html;
-                    tbody.appendChild(tr);
-                });
+                html += `
+                    <td class="col-st" style="color:${stColor}; font-weight: bold;">${p.st}</td>
+                    <td class="col-obs">${obsFmt}</td>
+                    <td class="col-foto">${imgHtml}</td>
+                `;
+                
+                tr.innerHTML = html;
+                tbody.appendChild(tr);
             });
         });
 
@@ -386,7 +454,7 @@
 
         const opt = { 
             margin: [5, 5, 5, 5], 
-            filename: `Vistoria_Bloco${savedData.bloco}_Apto${savedData.apto}.pdf`, 
+            filename: `Vistoria_${nomeModelo}_Bl${savedData.bloco}_Ap${savedData.apto}.pdf`, 
             image: { type: 'jpeg', quality: 0.98 },
             html2canvas: { scale: 2, useCORS: true }, 
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' } 
