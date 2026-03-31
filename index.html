@@ -91,9 +91,9 @@
             <label>MODELO DE VISTORIA</label>
             <select id="modelo-val" onchange="changeModelo()">
                 <option value="jabuticabeiras">Jabuticabeiras</option>
-                <option value="palmeiras_comum">Palmeiras Comum</option>
-                <option value="palmeiras_duplex">Palmeiras Duplex</option>
-                <option value="sagrados">Sagrados</option>
+                <option value="palmeiras_comum">Palmeira Real</option>
+                <option value="palmeiras_duplex">Palmeira Real Duplex</option>
+                <option value="sagrados">Sagrados Corações</option>
             </select>
         </div>
         <div><label>BLOCO/TORRE</label><input type="text" id="bloco-val" placeholder="A" oninput="autoSave()"></div>
@@ -110,7 +110,7 @@
         <tr>
             <td style="width: 20%;"><img src="logo_village.png" class="logo-img-pdf" onerror="this.style.display='none'"></td>
             <td style="width: 60%;">
-                <div style="font-size: 16px; font-weight: bold;">RELATÓRIO DE VISTORIA - <span id="pdf-modelo-text"></span></div>
+                <div style="font-size: 16px; font-weight: bold;">RELATÓRIO DE VISTORIA INTERNA DO IMOVEL - <span id="pdf-modelo-text"></span></div>
                 <div style="font-size: 14px; margin-top: 5px;"><b>Bloco:</b> <span id="pdf-bloco-text"></span> | <b>Apto:</b> <span id="pdf-apto-text"></span></div>
                 <div style="font-size: 11px; margin-top: 5px;">
                     Resp: <span id="pdf-resp-text"></span> | Data: <span id="pdf-data-text"></span>
@@ -395,9 +395,9 @@
         const savedData = JSON.parse(localStorage.getItem('enza_v_v15'));
         
         let nomeModelo = "JABUTICABEIRAS";
-        if(savedData.modelo === "palmeiras_comum") nomeModelo = "PALMEIRAS COMUM";
-        if(savedData.modelo === "palmeiras_duplex") nomeModelo = "PALMEIRAS DUPLEX";
-        if(savedData.modelo === "sagrados") nomeModelo = "SAGRADOS";
+        if(savedData.modelo === "palmeiras_comum") nomeModelo = "PALMEIRA REAL COMUM";
+        if(savedData.modelo === "palmeiras_duplex") nomeModelo = "PALMEIRA REAL DUPLEX";
+        if(savedData.modelo === "sagrados") nomeModelo = "SAGRADOS CORAÇÕES";
 
         document.getElementById('pdf-modelo-text').innerText = nomeModelo;
         document.getElementById('pdf-bloco-text').innerText = savedData.bloco;
