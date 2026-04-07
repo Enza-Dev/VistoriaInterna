@@ -12,14 +12,20 @@
         .container { background: white; padding: 20px; max-width: 1200px; margin: 20px auto; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         
         /* Cabeçalho */
-        .header-tablet { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #003399; padding-bottom: 15px; margin-bottom: 20px; gap: 15px; }
+        .header-tablet { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #003399; padding-bottom: 15px; margin-bottom: 10px; gap: 15px; }
         .logo-img-t { height: 45px; object-fit: contain; }
 
-        .config-box { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 20px; flex-grow: 1; padding: 0 10px; }
+        .config-box { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 15px; flex-grow: 1; padding: 0 10px; }
         .config-box div { display: flex; flex-direction: column; gap: 5px; }
         .config-box label { font-size: 11px; font-weight: bold; color: #003399; text-transform: uppercase; text-align: center; }
         .config-box input, .config-box select { border: none; border-bottom: 2px solid #003399; background: transparent; font-size: 15px; font-weight: bold; outline: none; padding: 5px 0; font-family: inherit; color: #333; text-align: center; }
         .config-box select { cursor: pointer; text-align-last: center; }
+        #bloco-val, #apto-val { width: 70px; } /* Campos menores para caber melhor na linha */
+
+        /* Legenda */
+        .legend-box { text-align: right; font-size: 13px; margin-bottom: 15px; padding-right: 5px; color: #555; }
+        .badge-a { color: #27ae60; font-weight: bold; }
+        .badge-p { color: #d4ac0d; font-weight: bold; }
 
         .setor-card { margin-bottom: 15px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden; background: #fff; }
         .setor-header { background: #003399; color: white; padding: 15px; font-weight: bold; cursor: pointer; list-style: none; }
@@ -27,7 +33,6 @@
         /* Layout em Linha (Grid) Ajustado para iPad */
         .item-row { 
             display: grid; 
-            /* Reduzido o título e os botões para a observação caber perfeitamente no iPad */
             grid-template-columns: 160px 80px 1fr 45px auto; 
             gap: 10px; 
             align-items: center; 
@@ -57,13 +62,14 @@
         .img-preview { width: 100%; height: 100%; object-fit: cover; border-radius: 4px; border: 1px solid #ddd; }
         .btn-remove-foto { position: absolute; top: -5px; right: -5px; background: #e74c3c; color: white; border: none; border-radius: 50%; width: 16px; height: 16px; font-size: 9px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
-        /* Responsividade para Celulares (Alterado para 768px para não afetar o iPad) */
+        /* Responsividade para Celulares */
         @media (max-width: 768px) {
             .header-tablet { flex-direction: column; }
             .logo-img-t { height: 35px; }
             .item-row { grid-template-columns: 1fr; gap: 8px; padding: 15px; border-bottom: 3px solid #eee; }
             .btn-group { width: 100px; }
             .fotos-preview-container { max-width: 100%; }
+            #bloco-val, #apto-val { width: 100%; }
         }
 
         .footer-actions { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 15px; display: flex; gap: 10px; box-shadow: 0 -3px 10px rgba(0,0,0,0.1); z-index: 100; }
@@ -116,11 +122,17 @@
                     <option value="sagrados">Sagrados Corações</option>
                 </select>
             </div>
+            <div><label>BLOCO</label><input type="text" id="bloco-val" placeholder="Ex: A" oninput="autoSave()"></div>
+            <div><label>APTO</label><input type="text" id="apto-val" placeholder="Ex: 101" oninput="autoSave()"></div>
             <div><label>VISTORIADOR</label><input type="text" id="resp-val" placeholder="Nome" oninput="autoSave()"></div>
             <div><label>DATA</label><input type="date" id="data-val" oninput="autoSave()"></div>
         </div>
 
         <img src="logo_enza.png" class="logo-img-t" alt="Enza" onerror="this.style.display='none'">
+    </div>
+
+    <div class="legend-box">
+        <strong>Legenda:</strong> <span class="badge-a">A = Aprovado</span> | <span class="badge-p">P = Pendente</span>
     </div>
 
     <div id="content"></div>
@@ -144,8 +156,8 @@
             <td style="width: 20%;"><img src="logo_village.png" class="logo-img-pdf" onerror="this.style.display='none'"></td>
             <td style="width: 60%;">
                 <div style="font-size: 16px; font-weight: bold;">RELATÓRIO DE VISTORIA INTERNA DO IMOVEL - <span id="pdf-modelo-text"></span></div>
-                <div style="font-size: 14px; margin-top: 5px;">
-                    Resp: <span id="pdf-resp-text"></span> | Data: <span id="pdf-data-text"></span>
+                <div style="font-size: 13px; margin-top: 5px;">
+                    <b>Bloco:</b> <span id="pdf-bloco-text"></span> | <b>Apto:</b> <span id="pdf-apto-text"></span> | <b>Resp:</b> <span id="pdf-resp-text"></span> | <b>Data:</b> <span id="pdf-data-text"></span>
                 </div>
             </td>
             <td style="width: 20%;"><img src="logo_enza.png" class="logo-img-pdf" onerror="this.style.display='none'"></td>
@@ -215,12 +227,14 @@
 
     let db = []; 
     let currentPhotoContainer = null; 
-    const DB_KEY = 'enza_v_v18'; 
+    const DB_KEY = 'enza_v_v19';
 
     function init() {
         const saved = JSON.parse(localStorage.getItem(DB_KEY)) || {};
         
         document.getElementById('modelo-val').value = saved.modelo || "jabuticabeiras";
+        document.getElementById('bloco-val').value = saved.bloco || "";
+        document.getElementById('apto-val').value = saved.apto || "";
         document.getElementById('resp-val').value = saved.resp || "";
         document.getElementById('data-val').value = saved.d_val || ""; 
 
@@ -233,6 +247,8 @@
             const currentSave = JSON.parse(localStorage.getItem(DB_KEY)) || {};
             const cleanData = { 
                 modelo: document.getElementById('modelo-val').value,
+                bloco: currentSave.bloco,
+                apto: currentSave.apto,
                 resp: currentSave.resp, 
                 d_val: currentSave.d_val 
             };
@@ -382,6 +398,8 @@
 
         const data = { 
             modelo: modeloSelec.value,
+            bloco: document.getElementById('bloco-val').value,
+            apto: document.getElementById('apto-val').value,
             resp: document.getElementById('resp-val').value,
             d_val: document.getElementById('data-val').value
         };
@@ -411,7 +429,7 @@
     function manualSave() { autoSave(); alert("✅ Dados e fotos salvos com sucesso!"); }
 
     function formatDate(dateStr) {
-        if(!dateStr) return "";
+        if(!dateStr) return "-";
         return dateStr.split('-').reverse().join('/');
     }
 
@@ -426,8 +444,10 @@
         if(savedData.modelo === "sagrados") nomeModelo = "SAGRADOS CORAÇÕES";
 
         document.getElementById('pdf-modelo-text').innerText = nomeModelo;
+        document.getElementById('pdf-bloco-text').innerText = savedData.bloco || "-";
+        document.getElementById('pdf-apto-text').innerText = savedData.apto || "-";
         document.getElementById('pdf-resp-text').innerText = savedData.resp || "-";
-        document.getElementById('pdf-data-text').innerText = formatDate(savedData.d_val) || "-";
+        document.getElementById('pdf-data-text').innerText = formatDate(savedData.d_val);
 
         const tbody = document.getElementById('pdf-table-body'); 
         tbody.innerHTML = "";
@@ -478,9 +498,10 @@
         element.style.display = 'block';
 
         const vistoriadorNome = savedData.resp ? savedData.resp.replace(/\s+/g, '_') : 'Vistoriador';
+        const blocoAptoStr = (savedData.bloco || savedData.apto) ? `_Bl${savedData.bloco || 'X'}_Ap${savedData.apto || 'X'}` : '';
         const opt = { 
             margin: [5, 5, 5, 5], 
-            filename: `Vistoria_${nomeModelo}_${vistoriadorNome}.pdf`, 
+            filename: `Vistoria_${nomeModelo}${blocoAptoStr}_${vistoriadorNome}.pdf`, 
             image: { type: 'jpeg', quality: 0.98 },
             html2canvas: { scale: 2, useCORS: true }, 
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' } 
