@@ -6,59 +6,80 @@
     <title>Vistoria Interna - ENZA</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        /* --- INTERFACE TABLET --- */
+        /* --- INTERFACE TABLET / DESKTOP --- */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; padding-bottom: 90px; }
-        .container { background: white; padding: 20px; max-width: 900px; margin: 20px auto; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .container { background: white; padding: 20px; max-width: 1200px; margin: 20px auto; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         
-        .header-tablet { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #003399; padding-bottom: 10px; margin-bottom: 20px; }
+        /* Cabeçalho */
+        .header-tablet { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #003399; padding-bottom: 15px; margin-bottom: 20px; gap: 15px; }
         .logo-img-t { height: 45px; object-fit: contain; }
 
-        .config-box { background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #ddd; display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; }
+        .config-box { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 20px; flex-grow: 1; padding: 0 10px; }
         .config-box div { display: flex; flex-direction: column; gap: 5px; }
-        .config-box label { font-size: 11px; font-weight: bold; color: #003399; }
-        .config-box input, .config-box select { border: none; border-bottom: 2px solid #003399; background: transparent; font-size: 15px; font-weight: bold; outline: none; padding: 5px 0; font-family: inherit; color: #333; }
-        .config-box select { cursor: pointer; }
+        .config-box label { font-size: 11px; font-weight: bold; color: #003399; text-transform: uppercase; text-align: center; }
+        .config-box input, .config-box select { border: none; border-bottom: 2px solid #003399; background: transparent; font-size: 15px; font-weight: bold; outline: none; padding: 5px 0; font-family: inherit; color: #333; text-align: center; }
+        .config-box select { cursor: pointer; text-align-last: center; }
 
-        .setor-card { margin-bottom: 10px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden; }
+        .setor-card { margin-bottom: 15px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden; background: #fff; }
         .setor-header { background: #003399; color: white; padding: 15px; font-weight: bold; cursor: pointer; list-style: none; }
-        .item-details { border-bottom: 1px solid #eee; background: #fff; }
-        .item-summary { padding: 15px; font-weight: 600; cursor: pointer; list-style: none; background: #fafafa; border-left: 4px solid transparent; }
-        details[open] > .item-summary { border-left-color: #003399; background: #f0f7ff; }
         
-        .form-body { padding: 15px; display: flex; flex-direction: column; gap: 15px; }
-        
-        /* Bloco Simplificado (Único por item) */
-        .problem-block { background: #fff; display: grid; grid-template-columns: 200px 1fr 240px; gap: 15px; align-items: start; }
-        
-        @media (max-width: 768px) {
-            .problem-block { grid-template-columns: 1fr; }
+        /* Layout em Linha (Grid) Ajustado para iPad */
+        .item-row { 
+            display: grid; 
+            /* Reduzido o título e os botões para a observação caber perfeitamente no iPad */
+            grid-template-columns: 160px 80px 1fr 45px auto; 
+            gap: 10px; 
+            align-items: center; 
+            padding: 10px 15px; 
+            border-bottom: 1px solid #eee; 
         }
+        .item-row:last-child { border-bottom: none; }
+        .item-row:hover { background: #f9fbfd; }
         
-        .field-group { display: flex; flex-direction: column; gap: 5px; height: 100%; }
-        .field-group label { font-size: 11px; font-weight: bold; color: #666; text-transform: uppercase; }
-        
-        textarea { padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 15px; width: 100%; font-family: inherit; resize: vertical; min-height: 80px; flex-grow: 1; }
+        .item-name { font-weight: 600; font-size: 13px; color: #333; line-height: 1.2; }
 
-        .btn-group { display: flex; gap: 5px; height: 100%; }
-        .btn-status { flex: 1; border: 2px solid #ccc; border-radius: 8px; font-weight: bold; cursor: pointer; background: white; font-size: 13px; min-height: 50px; }
+        /* Botões Status (A / P) */
+        .btn-group { display: flex; gap: 5px; height: 35px; }
+        .btn-status { flex: 1; border: 2px solid #ccc; border-radius: 6px; font-weight: bold; cursor: pointer; background: white; font-size: 14px; display: flex; align-items: center; justify-content: center; }
         .btn-aprovado.active { background: #27ae60; color: white; border-color: #27ae60; }
         .btn-pendente.active { background: #f1c40f; color: black; border-color: #f1c40f; }
 
-        /* Upload de Foto */
-        .upload-container { display: flex; flex-direction: column; gap: 5px; width: 100%; }
-        .foto-upload-btn { width: 100%; background: #f0f2f5; border: 1px dashed #999; border-radius: 6px; text-align: center; cursor: pointer; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; padding: 12px; min-height: 50px; }
-        .foto-upload-btn input[type="file"] { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+        /* Observação */
+        textarea { padding: 8px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; width: 100%; font-family: inherit; resize: vertical; height: 35px; min-height: 35px; }
+
+        /* Upload de Foto e Previews */
+        .foto-upload-btn { background: #003399; color: white; border: none; border-radius: 8px; width: 45px; height: 45px; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: 0.2s; }
+        .foto-upload-btn:active { transform: scale(0.95); }
         
-        .fotos-preview-container { display: flex; gap: 5px; width: 100%; }
-        .img-preview-box { flex: 1; position: relative; }
-        .img-preview { width: 100%; height: 60px; object-fit: cover; border-radius: 4px; }
-        .btn-remove-foto { position: absolute; top: -5px; right: -5px; background: #e74c3c; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 10px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .fotos-preview-container { display: flex; flex-wrap: wrap; gap: 5px; max-width: 320px; }
+        .img-preview-box { width: 35px; height: 35px; position: relative; }
+        .img-preview { width: 100%; height: 100%; object-fit: cover; border-radius: 4px; border: 1px solid #ddd; }
+        .btn-remove-foto { position: absolute; top: -5px; right: -5px; background: #e74c3c; color: white; border: none; border-radius: 50%; width: 16px; height: 16px; font-size: 9px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
+        /* Responsividade para Celulares (Alterado para 768px para não afetar o iPad) */
+        @media (max-width: 768px) {
+            .header-tablet { flex-direction: column; }
+            .logo-img-t { height: 35px; }
+            .item-row { grid-template-columns: 1fr; gap: 8px; padding: 15px; border-bottom: 3px solid #eee; }
+            .btn-group { width: 100px; }
+            .fotos-preview-container { max-width: 100%; }
+        }
 
         .footer-actions { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 15px; display: flex; gap: 10px; box-shadow: 0 -3px 10px rgba(0,0,0,0.1); z-index: 100; }
         .btn-action { flex: 1; padding: 18px; border: none; border-radius: 8px; color: white; font-weight: bold; font-size: 16px; cursor: pointer; }
         .save { background: #2c3e50; }
         .pdf { background: #c0392b; }
+
+        /* Modal de Fotos */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: white; padding: 25px; border-radius: 12px; width: 90%; max-width: 350px; display: flex; flex-direction: column; gap: 15px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .modal-content h3 { color: #003399; margin-bottom: 5px; }
+        .modal-btn { padding: 15px; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.2s; }
+        .modal-btn:active { transform: scale(0.98); }
+        .btn-gallery { background: #3498db; color: white; }
+        .btn-camera { background: #2ecc71; color: white; }
+        .btn-cancel { background: #e74c3c; color: white; margin-top: 10px; }
 
         /* --- PDF LAYOUT --- */
         #pdf-template { display: none; width: 287mm; background: white; padding: 5mm; color: black; }
@@ -73,9 +94,10 @@
         .col-local { width: 15%; font-weight: bold; }
         .col-item { width: 15%; text-align: left !important; padding-left: 5px !important; }
         .col-st { width: 10%; font-weight: bold; font-size: 10px;}
-        .col-obs { width: 30%; text-align: left !important; padding-left: 5px !important; }
-        .col-foto { width: 30%; }
-        .pdf-img { max-height: 70px; max-width: 31%; object-fit: contain; border-radius: 4px; display: inline-block; margin: 0 1%; }
+        .col-obs { width: 25%; text-align: left !important; padding-left: 5px !important; }
+        .col-foto { width: 35%; }
+        /* Ajustado para caber até 7 imagens lado a lado no PDF */
+        .pdf-img { max-height: 40px; max-width: 13%; object-fit: cover; border-radius: 2px; display: inline-block; margin: 1px; border: 1px solid #ccc; }
     </style>
 </head>
 <body>
@@ -83,26 +105,37 @@
 <div class="container">
     <div class="header-tablet">
         <img src="logo_village.png" class="logo-img-t" alt="Village" onerror="this.style.display='none'">
+
+        <div class="config-box">
+            <div>
+                <label>MODELO</label>
+                <select id="modelo-val" onchange="changeModelo()">
+                    <option value="jabuticabeiras">Jabuticabeiras</option>
+                    <option value="palmeiras_comum">Palmeira Real</option>
+                    <option value="palmeiras_duplex">Palmeira Real Duplex</option>
+                    <option value="sagrados">Sagrados Corações</option>
+                </select>
+            </div>
+            <div><label>VISTORIADOR</label><input type="text" id="resp-val" placeholder="Nome" oninput="autoSave()"></div>
+            <div><label>DATA</label><input type="date" id="data-val" oninput="autoSave()"></div>
+        </div>
+
         <img src="logo_enza.png" class="logo-img-t" alt="Enza" onerror="this.style.display='none'">
     </div>
 
-    <div class="config-box">
-        <div>
-            <label>MODELO DE VISTORIA</label>
-            <select id="modelo-val" onchange="changeModelo()">
-                <option value="jabuticabeiras">Jabuticabeiras</option>
-                <option value="palmeiras_comum">Palmeira Real</option>
-                <option value="palmeiras_duplex">Palmeira Real Duplex</option>
-                <option value="sagrados">Sagrados Corações</option>
-            </select>
-        </div>
-        <div><label>BLOCO/TORRE</label><input type="text" id="bloco-val" placeholder="A" oninput="autoSave()"></div>
-        <div><label>APTO</label><input type="text" id="apto-val" placeholder="00" oninput="autoSave()"></div>
-        <div><label>VISTORIADOR</label><input type="text" id="resp-val" placeholder="Nome" oninput="autoSave()"></div>
-        <div><label>DATA</label><input type="date" id="data-val" oninput="autoSave()"></div>
-    </div>
-
     <div id="content"></div>
+</div>
+
+<div id="photo-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+        <h3>Adicionar Foto</h3>
+        <button class="modal-btn btn-gallery" onclick="triggerFileInput('gallery')">📂 Enviar Foto</button>
+        <button class="modal-btn btn-camera" onclick="triggerFileInput('camera')">📷 Tirar Foto</button>
+        <button class="modal-btn btn-cancel" onclick="closePhotoModal()">Cancelar</button>
+        
+        <input type="file" id="file-gallery" accept="image/*" multiple style="display:none" onchange="processModalImages(this)">
+        <input type="file" id="file-camera" accept="image/*" capture="environment" style="display:none" onchange="processModalImages(this)">
+    </div>
 </div>
 
 <div id="pdf-template">
@@ -111,8 +144,7 @@
             <td style="width: 20%;"><img src="logo_village.png" class="logo-img-pdf" onerror="this.style.display='none'"></td>
             <td style="width: 60%;">
                 <div style="font-size: 16px; font-weight: bold;">RELATÓRIO DE VISTORIA INTERNA DO IMOVEL - <span id="pdf-modelo-text"></span></div>
-                <div style="font-size: 14px; margin-top: 5px;"><b>Bloco:</b> <span id="pdf-bloco-text"></span> | <b>Apto:</b> <span id="pdf-apto-text"></span></div>
-                <div style="font-size: 11px; margin-top: 5px;">
+                <div style="font-size: 14px; margin-top: 5px;">
                     Resp: <span id="pdf-resp-text"></span> | Data: <span id="pdf-data-text"></span>
                 </div>
             </td>
@@ -140,13 +172,11 @@
 </div>
 
 <script>
-    // Listas padronizadas para facilitar a montagem dos templates
     const itensSala = ["Tomadas, interruptores", "Paredes", "Teto", "Esquadrias Madeiras", "Esquadrias Metálicas", "Rodapé", "Pintura", "Gradil Varanda", "Interfone"];
     const itensQuarto = ["Tomadas, interruptores", "Paredes", "Teto", "Esquadrias Madeiras", "Esquadrias Metálicas", "Pintura"];
     const itensBanheiro = ["Torneiras", "Vasos sanitários", "Ponto Chuveiro", "Ralo", "Pia", "Esquadrias Metálicas", "Esquadrias de Madeira", "Revestimento Cerâmico", "Pintura", "Tomadas, interruptores"];
     const itensCozinha = ["Revestimento Cerâmico", "Torneiras", "Ralos", "Pia", "Esquadrias Metálicas", "Pintura", "Tomadas, interruptores"];
 
-    // Estruturas de acordo com os empreendimentos
     const templates = {
         "jabuticabeiras": [
             { local: "Sala de Estar / Jantar", itens: itensSala },
@@ -184,35 +214,32 @@
     };
 
     let db = []; 
+    let currentPhotoContainer = null; 
+    const DB_KEY = 'enza_v_v18'; 
 
     function init() {
-        const saved = JSON.parse(localStorage.getItem('enza_v_v15')) || {};
+        const saved = JSON.parse(localStorage.getItem(DB_KEY)) || {};
         
         document.getElementById('modelo-val').value = saved.modelo || "jabuticabeiras";
-        document.getElementById('bloco-val').value = saved.bloco || saved.torre || "";
-        document.getElementById('apto-val').value = saved.apto || "";
         document.getElementById('resp-val').value = saved.resp || "";
-        document.getElementById('data-val').value = saved.d_val || saved.d_ini || ""; 
+        document.getElementById('data-val').value = saved.d_val || ""; 
 
         renderStructure();
     }
 
     function changeModelo() {
-        const confirmar = confirm("Mudar o modelo de vistoria irá reconfigurar os cômodos. Se você já preencheu dados, certifique-se de salvar ou gerar o PDF antes. Deseja trocar o modelo?");
-        
+        const confirmar = confirm("Mudar o modelo irá reconfigurar os cômodos. Deseja trocar?");
         if (confirmar) {
-            const currentSave = JSON.parse(localStorage.getItem('enza_v_v15')) || {};
+            const currentSave = JSON.parse(localStorage.getItem(DB_KEY)) || {};
             const cleanData = { 
                 modelo: document.getElementById('modelo-val').value,
-                bloco: currentSave.bloco, 
-                apto: currentSave.apto, 
                 resp: currentSave.resp, 
                 d_val: currentSave.d_val 
             };
-            localStorage.setItem('enza_v_v15', JSON.stringify(cleanData));
+            localStorage.setItem(DB_KEY, JSON.stringify(cleanData));
             renderStructure();
         } else {
-            const saved = JSON.parse(localStorage.getItem('enza_v_v15')) || {};
+            const saved = JSON.parse(localStorage.getItem(DB_KEY)) || {};
             document.getElementById('modelo-val').value = saved.modelo || "jabuticabeiras";
         }
     }
@@ -220,7 +247,7 @@
     function renderStructure() {
         const modeloSelect = document.getElementById('modelo-val').value;
         db = templates[modeloSelect]; 
-        const saved = JSON.parse(localStorage.getItem('enza_v_v15')) || {};
+        const saved = JSON.parse(localStorage.getItem(DB_KEY)) || {};
 
         const container = document.getElementById('content');
         container.innerHTML = ''; 
@@ -228,83 +255,60 @@
         db.forEach((setor, sIdx) => {
             const sec = document.createElement('details');
             sec.className = 'setor-card';
-            sec.innerHTML = `<summary class="setor-header">${setor.local}</summary><div id="sec-${sIdx}"></div>`;
+            sec.open = true; 
+            sec.innerHTML = `<summary class="setor-header">${setor.local}</summary><div id="sec-${sIdx}" style="background:#fff;"></div>`;
             container.appendChild(sec);
 
             setor.itens.forEach((item, iIdx) => {
                 const id = `s${sIdx}i${iIdx}`;
-                
-                // Resgata os dados antigos (se for array pega o 1º, se não, usa vazio)
-                let probData = { st:'', obs:'', img1:'', img2:'', img3:'' };
+                let probData = { st:'', obs:'' };
+                for(let i=1; i<=7; i++) probData[`img${i}`] = '';
+
                 if (saved[id] && saved[id].length > 0) {
                     probData = saved[id][0];
                 }
-                
-                const det = document.createElement('details');
-                det.className = 'item-details';
-                
-                let innerHTML = `
-                    <summary class="item-summary">${item}</summary>
-                    <div class="form-body" id="list-${id}"></div>
-                `;
-                det.innerHTML = innerHTML;
-                document.getElementById(`sec-${sIdx}`).appendChild(det);
 
-                renderProblemBlock(id, probData);
+                renderItemRow(id, item, probData, `sec-${sIdx}`);
             });
         });
         
         autoSave(); 
     }
 
-    function renderProblemBlock(itemId, data) {
-        const list = document.getElementById(`list-${itemId}`);
-        const block = document.createElement('div');
-        block.className = 'problem-block';
+    function renderItemRow(itemId, itemName, data, parentId) {
+        const list = document.getElementById(parentId);
+        const row = document.createElement('div');
+        row.className = 'item-row';
+        row.id = `row-${itemId}`;
         
         const st = data ? data.st : '';
         const obs = data ? data.obs : '';
-        const img1 = data ? (data.img1 || data.img || '') : '';
-        const img2 = data ? data.img2 || '' : '';
-        const img3 = data ? data.img3 || '' : '';
 
-        block.innerHTML = `
-            <div class="field-group">
-                <label>Status</label>
-                <div class="btn-group">
-                    <button class="btn-status btn-aprovado ${st==='APROVADO'?'active':''}" onclick="setStatus(this,'APROVADO')">APROVADO</button>
-                    <button class="btn-status btn-pendente ${st==='PENDENTE'?'active':''}" onclick="setStatus(this,'PENDENTE')">PENDENTE</button>
+        // Prepara HTML das 7 caixas de preview
+        let previewsHtml = '';
+        for(let i = 1; i <= 7; i++) {
+            const imgSrc = data ? (data[`img${i}`] || '') : '';
+            previewsHtml += `
+                <div class="img-preview-box" style="display: ${imgSrc ? 'block' : 'none'}">
+                    <img class="img-preview" src="${imgSrc}">
+                    <button class="btn-remove-foto" onclick="removeFoto(this)">X</button>
                 </div>
+            `;
+        }
+
+        row.innerHTML = `
+            <div class="item-name">${itemName}</div>
+            <div class="btn-group">
+                <button class="btn-status btn-aprovado ${st==='A'?'active':''}" onclick="setStatus(this,'A')">A</button>
+                <button class="btn-status btn-pendente ${st==='P'?'active':''}" onclick="setStatus(this,'P')">P</button>
             </div>
-            <div class="field-group">
-                <label>Observação</label>
-                <textarea oninput="autoSave()" placeholder="Descreva problemas, soluções ou detalhes importantes...">${obs}</textarea>
-            </div>
-            <div class="field-group">
-                <label>Fotos (Até 3)</label>
-                <div class="upload-container">
-                    <div class="foto-upload-btn">
-                        <span style="font-size: 12px; color: #666; font-weight: bold;">📷 Adicionar Fotos</span>
-                        <input type="file" accept="image/*" multiple capture="environment" onchange="processImages(this)">
-                    </div>
-                    <div class="fotos-preview-container">
-                        <div class="img-preview-box" style="display: ${img1 ? 'block' : 'none'}">
-                            <img class="img-preview" src="${img1}">
-                            <button class="btn-remove-foto" onclick="removeFoto(this)">X</button>
-                        </div>
-                        <div class="img-preview-box" style="display: ${img2 ? 'block' : 'none'}">
-                            <img class="img-preview" src="${img2}">
-                            <button class="btn-remove-foto" onclick="removeFoto(this)">X</button>
-                        </div>
-                        <div class="img-preview-box" style="display: ${img3 ? 'block' : 'none'}">
-                            <img class="img-preview" src="${img3}">
-                            <button class="btn-remove-foto" onclick="removeFoto(this)">X</button>
-                        </div>
-                    </div>
-                </div>
+            <textarea oninput="autoSave()" placeholder="Observação...">${obs}</textarea>
+            <button class="foto-upload-btn" onclick="openPhotoModal(this)">📷</button>
+            <div class="fotos-preview-container">
+                ${previewsHtml}
             </div>
         `;
-        list.appendChild(block);
+        list.appendChild(row);
     }
 
     function setStatus(btn, st) { 
@@ -313,18 +317,38 @@
         autoSave(); 
     }
 
-    function processImages(input) {
+    // --- MODAL E FOTOS ---
+    function openPhotoModal(btn) {
+        currentPhotoContainer = btn.closest('.item-row').querySelector('.fotos-preview-container');
+        document.getElementById('photo-modal').style.display = 'flex';
+    }
+
+    function closePhotoModal() {
+        document.getElementById('photo-modal').style.display = 'none';
+        currentPhotoContainer = null;
+    }
+
+    function triggerFileInput(type) {
+        if(type === 'gallery') {
+            document.getElementById('file-gallery').click();
+        } else {
+            document.getElementById('file-camera').click();
+        }
+    }
+
+    function processModalImages(input) {
+        if(!currentPhotoContainer) return;
+        
         const files = Array.from(input.files);
         if (files.length === 0) return;
 
-        const container = input.closest('.upload-container').querySelector('.fotos-preview-container');
-        const previewBoxes = container.querySelectorAll('.img-preview-box');
-        
+        const previewBoxes = currentPhotoContainer.querySelectorAll('.img-preview-box');
         let emptyBoxes = Array.from(previewBoxes).filter(b => b.style.display === 'none' || b.querySelector('.img-preview').src === '');
         
         if (emptyBoxes.length === 0) {
-            alert("O limite é de 3 fotos por item. Remova alguma foto antes de adicionar outra.");
+            alert("O limite é de 7 fotos por item. Remova alguma foto antes de adicionar outra.");
             input.value = ''; 
+            closePhotoModal();
             return;
         }
 
@@ -340,7 +364,9 @@
             };
             reader.readAsDataURL(file);
         });
+        
         input.value = ''; 
+        closePhotoModal(); 
     }
 
     function removeFoto(btn) {
@@ -356,8 +382,6 @@
 
         const data = { 
             modelo: modeloSelec.value,
-            bloco: document.getElementById('bloco-val').value, 
-            apto: document.getElementById('apto-val').value,
             resp: document.getElementById('resp-val').value,
             d_val: document.getElementById('data-val').value
         };
@@ -365,21 +389,23 @@
         db.forEach((setor, sIdx) => {
             setor.itens.forEach((item, iIdx) => {
                 const id = `s${sIdx}i${iIdx}`;
-                const block = document.querySelector(`#list-${id} .problem-block`);
-                if (block) {
-                    const previews = block.querySelectorAll('.img-preview');
-                    // Salva como array para manter a compatibilidade
+                const row = document.getElementById(`row-${id}`);
+                if (row) {
+                    const previews = row.querySelectorAll('.img-preview');
+                    let imgData = {};
+                    for(let i=0; i<7; i++) {
+                        imgData[`img${i+1}`] = previews[i]?.src.includes('data:image') ? previews[i].src : '';
+                    }
+
                     data[id] = [{
-                        st: block.querySelector('.btn-group .active')?.innerText || '',
-                        obs: block.querySelector('textarea').value,
-                        img1: previews[0].src.includes('data:image') ? previews[0].src : '',
-                        img2: previews[1].src.includes('data:image') ? previews[1].src : '',
-                        img3: previews[2].src.includes('data:image') ? previews[2].src : ''
+                        st: row.querySelector('.btn-group .active')?.innerText || '',
+                        obs: row.querySelector('textarea').value,
+                        ...imgData
                     }];
                 }
             });
         });
-        localStorage.setItem('enza_v_v15', JSON.stringify(data));
+        localStorage.setItem(DB_KEY, JSON.stringify(data));
     }
 
     function manualSave() { autoSave(); alert("✅ Dados e fotos salvos com sucesso!"); }
@@ -392,7 +418,7 @@
     function exportPDF() {
         window.scrollTo(0, 0);
         autoSave();
-        const savedData = JSON.parse(localStorage.getItem('enza_v_v15'));
+        const savedData = JSON.parse(localStorage.getItem(DB_KEY));
         
         let nomeModelo = "JABUTICABEIRAS";
         if(savedData.modelo === "palmeiras_comum") nomeModelo = "PALMEIRA REAL COMUM";
@@ -400,10 +426,8 @@
         if(savedData.modelo === "sagrados") nomeModelo = "SAGRADOS CORAÇÕES";
 
         document.getElementById('pdf-modelo-text').innerText = nomeModelo;
-        document.getElementById('pdf-bloco-text').innerText = savedData.bloco;
-        document.getElementById('pdf-apto-text').innerText = savedData.apto;
-        document.getElementById('pdf-resp-text').innerText = savedData.resp;
-        document.getElementById('pdf-data-text').innerText = formatDate(savedData.d_val);
+        document.getElementById('pdf-resp-text').innerText = savedData.resp || "-";
+        document.getElementById('pdf-data-text').innerText = formatDate(savedData.d_val) || "-";
 
         const tbody = document.getElementById('pdf-table-body'); 
         tbody.innerHTML = "";
@@ -414,32 +438,33 @@
             setor.itens.forEach((item, iIdx) => {
                 const id = `s${sIdx}i${iIdx}`;
                 const probs = savedData[id] || [];
-                // Pega sempre o primeiro (único)
-                const p = probs.length > 0 ? probs[0] : {st:'', obs:'', img1:'', img2:'', img3:''};
+                const p = probs.length > 0 ? probs[0] : {st:''};
 
                 const tr = document.createElement('tr');
                 const obsFmt = p.obs ? p.obs.replace(/\n/g, '<br>') : '';
                 let html = "";
                 
                 if (!setorRendered) {
-                    // O rowspan agora é exatamente a quantidade de itens do setor
                     html += `<td rowspan="${setor.itens.length}" class="col-local">${setor.local}</td>`;
                     setorRendered = true;
                 }
 
                 html += `<td class="col-item">${item}</td>`;
 
+                // Renderiza até 7 imagens
                 let imgHtml = '';
-                if (p.img1) imgHtml += `<img src="${p.img1}" class="pdf-img">`;
-                if (p.img2) imgHtml += `<img src="${p.img2}" class="pdf-img">`;
-                if (p.img3) imgHtml += `<img src="${p.img3}" class="pdf-img">`;
+                for(let i=1; i<=7; i++) {
+                    if (p[`img${i}`]) imgHtml += `<img src="${p[`img${i}`]}" class="pdf-img">`;
+                }
 
+                // Traduz A para APROVADO e P para PENDENTE no PDF
                 let stColor = 'black';
-                if (p.st === 'PENDENTE') stColor = '#d4ac0d'; 
-                if (p.st === 'APROVADO') stColor = '#27ae60'; 
+                let stDisplay = p.st;
+                if (p.st === 'P') { stColor = '#d4ac0d'; stDisplay = 'PENDENTE'; } 
+                if (p.st === 'A') { stColor = '#27ae60'; stDisplay = 'APROVADO'; } 
 
                 html += `
-                    <td class="col-st" style="color:${stColor}; font-weight: bold;">${p.st}</td>
+                    <td class="col-st" style="color:${stColor}; font-weight: bold;">${stDisplay}</td>
                     <td class="col-obs">${obsFmt}</td>
                     <td class="col-foto">${imgHtml}</td>
                 `;
@@ -452,9 +477,10 @@
         const element = document.getElementById('pdf-template');
         element.style.display = 'block';
 
+        const vistoriadorNome = savedData.resp ? savedData.resp.replace(/\s+/g, '_') : 'Vistoriador';
         const opt = { 
             margin: [5, 5, 5, 5], 
-            filename: `Vistoria_${nomeModelo}_Bl${savedData.bloco}_Ap${savedData.apto}.pdf`, 
+            filename: `Vistoria_${nomeModelo}_${vistoriadorNome}.pdf`, 
             image: { type: 'jpeg', quality: 0.98 },
             html2canvas: { scale: 2, useCORS: true }, 
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' } 
